@@ -1,0 +1,3 @@
+name,id,x,y,orientation,isOccupied
+UnloadingBay,1,140,150,0,true
+UnloadingBay,2,170,150,0,true

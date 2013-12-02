@@ -1,0 +1,5 @@
+name,id,x,y,orientation
+WorkSite,1,10,20,0
+WorkSite,2,60,20,0
+WorkSite,3,110,20,0
+WorkSite,4,110,70,0

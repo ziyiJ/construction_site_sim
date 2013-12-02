@@ -1,0 +1,22 @@
+##
+## Random Number Generator Seed
+## Using a long integer or just "time" to sample machine clock
+##
+seed = time
+#(alternatively use seed = 12345)
+
+##
+## Field Size
+##
+SiteWidth = 200
+SiteHeigh = 200
+
+##
+## Simulation Start Time
+## Format: yyyy-MM-dd'T'HH:mm
+##
+StartTime = 2012-11-29T13:27
+
+
+## enable this if simulation parameter dump on the console is needed
+print-params = true

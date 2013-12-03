@@ -21,11 +21,11 @@ public class Gate extends Place {
 	}
 	
 	public Gate(int id) {
-		super("Gate", id);
+		super("Entrance", id);
 	}
 	
 	public Gate(int id, boolean gate_is_exit) {
-		this(id);
+		super("Exit", id);
 		is_exit = gate_is_exit;
 	}
 	

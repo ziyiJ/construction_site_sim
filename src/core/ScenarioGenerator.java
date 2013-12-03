@@ -23,9 +23,10 @@ public class ScenarioGenerator {
 		site.agentReg.addTempStorages(ConstructionSiteState.siteLayout.genTempStorages(site));
 		
 		// site entrance
-		Gate[] entrances = ConstructionSiteState.siteLayout.genSiteEntrances(site);
-		for (Gate entrance : entrances) {
-		}
+		site.agentReg.addEntrances(ConstructionSiteState.siteLayout.genSiteEntrances(site));
+		
+		// site exit
+		site.agentReg.addExits(ConstructionSiteState.siteLayout.genSiteExits(site));
 	}
 
 	public static void populateVehicles(ConstructionSiteState site) {

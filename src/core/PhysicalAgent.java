@@ -15,7 +15,7 @@ import sim.util.Double2D;
 import sim.util.MutableDouble2D;
 import util.MutableSE2;
 
-public class PhysicalAgent extends Agent implements SpatialReference {
+public class PhysicalAgent extends Agent {
 	private static final long serialVersionUID = 2866787838674156110L;
 	
 	public double scale = 4;
@@ -45,6 +45,11 @@ public class PhysicalAgent extends Agent implements SpatialReference {
     	Double2D loc = site.getArea().getObjectLocation(this);
     	return getLocatedArea(loc.x, loc.y, 1.0, 1.0);
     }
+    
+    
+    // ---------------------------------------------------------------- -------------------------------- 
+    // Start of the old staff ------------------------------------------------------------
+    // ---------------------------------------------------------------- -------------------------------- 
 	
 	// The pose of the agent
 	private MutableSE2 positionAndOrientation = new MutableSE2();

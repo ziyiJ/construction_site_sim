@@ -38,6 +38,8 @@ public class DeliverySchedule {
 		String[] line = deliverySchedule.poll();
 		try {
 			next_truck = new Truck(Integer.parseInt(line[0]), line[1], line[2]);
+			next_truck.setEntrance(site.agentReg.findEntrance(Integer.parseInt(line[3])));
+			next_truck.setExit(site.agentReg.findExit(Integer.parseInt(line[4])));
 			next_truck.setSiteState(site);
 		}
 		catch (Exception ex) {

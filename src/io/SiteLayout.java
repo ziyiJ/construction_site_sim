@@ -19,17 +19,19 @@ public class SiteLayout {
 	private File tempstoragesLayout;
 	private File unloadingbaysLayout;
 	private File siteentranceLayout;
+	private File siteexitLayout;
 	
 	private static final String WORKSITES_FILE="worksites";
 	private static final String TEMPSTORAGES_FILE="tempstorages";
 	private static final String UNLOADINGBAYS_FILE="unloadingbays";
 	private static final String SITEENTRANCE_FILE="siteentrances";
-	private static final String SITEEXIT_FILE="siteentrances";
+	private static final String SITEEXIT_FILE="siteexits";
 	
 	private static final int worksites_file_fields = 5;
 	private static final int unloadingbays_file_fields = 6;
 	private static final int temstorages_file_fields = 5;
 	private static final int siteentrance_file_fields = 5;
+	private static final int siteexit_file_fields = 5;
 	
 	public SiteLayout(String path) {
 		siteLayoutPath = new File(path).getAbsoluteFile();
@@ -37,6 +39,7 @@ public class SiteLayout {
 		tempstoragesLayout = new File(siteLayoutPath, TEMPSTORAGES_FILE);
 		unloadingbaysLayout = new File(siteLayoutPath, UNLOADINGBAYS_FILE);
 		siteentranceLayout = new File(siteLayoutPath, SITEENTRANCE_FILE);
+		siteexitLayout = new File(siteLayoutPath, SITEEXIT_FILE);
 	}
 	
 	public WorkSite[] genWorkSites(ConstructionSiteState site) throws IOException {
@@ -105,6 +108,23 @@ public class SiteLayout {
 					+ entrances[i].getPositionAndOrientation().getPosition().y + ")");
 		}
 		return entrances;
+	}
+	
+	public Gate[] genSiteExits(ConstructionSiteState site) throws IOException {
+		List<String[]> content = CSVFile.readCSV(siteexitLayout, siteexit_file_fields);
+		Gate[] exits = new Gate[content.size()];
+		for(int i = 0; i != content.size(); ++i) {
+			String[] line = content.get(i);
+			exits[i] = new Gate(Integer.parseInt(line[1]), true);
+			MutableSE2 pos = new MutableSE2(Double.parseDouble(line[2]), Double.parseDouble(line[3]), Double.parseDouble(line[4]));
+			exits[i].setSiteState(site);
+			exits[i].setPositionAndOrientation(pos);
+
+			System.out.println("Adding " + exits[i].toString() + " @ (" 
+					+ exits[i].getPositionAndOrientation().getPosition().x + ", "
+					+ exits[i].getPositionAndOrientation().getPosition().y + ")");
+		}
+		return exits;
 	}
 	
 }

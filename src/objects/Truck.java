@@ -19,9 +19,9 @@ public class Truck extends Vehicle {
 
 	private TRUCK_STATUS status;
 	
-	private Gate arriving_gate;
+	private Gate entrance;
 
-	private Gate exiting_gate;
+	private Gate exit;
 
 	private String nick_name;
 
@@ -38,6 +38,14 @@ public class Truck extends Vehicle {
 		this.nick_name = nick_name;
 		this.arriving_time = LocalDateTime.parse(time_str);
 		this.status = TRUCK_STATUS.ARRIVING;
+	}
+	
+	public void setEntrance(Gate gate) {
+		entrance = gate;
+	}
+
+	public void setExit(Gate gate) {
+		exit = gate;
 	}
 
 	@Override
@@ -63,7 +71,7 @@ public class Truck extends Vehicle {
 	public void step(SimState state) {
 		switch (status) {
 		case ARRIVING:
-			System.out.println(this.toString() + "Arriving at " + _siteState.currentTime());
+			System.out.println(this.toString() + " Arriving at " + _siteState.currentTime() + " from " + entrance.toString());
 			break;
 
 		case QUEUING_AT_ENTRANCE:

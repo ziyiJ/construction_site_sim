@@ -29,17 +29,32 @@ public class Gate extends Place {
 		is_exit = gate_is_exit;
 	}
 	
+	// when tuck first arrive at the door it must check in
 	public boolean checkIn(Truck t) {
 		if (queue.contains(t)) return false; 
-		t.setPositionAndOrientation(this.getPositionAndOrientation());
+		t.setPositionAndOrientation(this);
+		t.stop(this);
 		return queue.offer(t);
 	}
 	
-	public Truck letThrough() {
-		return queue.poll();
+	// open the gate let the next one go
+	public void releaseNext(UnloadingBay dest) {
+		// First get the first truck from queue
+		Truck next_to_go = queue.poll();
+		if (next_to_go != null) { // if we have truck in the queue
+			// set the signal in the truck that it can go
+			next_to_go.throughGate(this);
+			// tell the truck where to go
+			next_to_go.setDestination(dest);
+			next_to_go.setBay(dest);
+		}
 	}
 	
 	public void step(SimState state) {
+//		System.out.println("Gate checking");
+		UnloadingBay bay = _siteState.agentReg.nextEmpyBay();
+		if (bay != null) // if we do have an empty bay
+			releaseNext(bay);
 	}
 	
 	public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {

@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import objects.Gate;
@@ -13,7 +14,7 @@ public class AgentRegistry {
 	// TODO: a better way to maintain the code?
 	
 	private List<UnloadingBay> unloadingBays = new ArrayList<UnloadingBay>();
-	
+
 	private List<WorkSite> worksites = new ArrayList<WorkSite>();
 	
 	private List<Truck> trucks = new ArrayList<Truck>();
@@ -24,14 +25,12 @@ public class AgentRegistry {
 	
 	private List<TempStorage> tempStorages = new ArrayList<TempStorage>();
 	
-	private <T extends Agent> boolean add(T new_agent, List<T> store) {
+	private <T extends Agent> boolean add(T new_agent, Collection<T> store) {
 		return store.add(new_agent);
 	}
 	
-	private <T extends Agent> void addAll(T[] new_agents, List<T> store) {
-		for (T agent : new_agents) {
-			add(agent, store);
-		}
+	private <T extends Agent> void addAll(Collection<T> new_agents, Collection<T> store) {
+		store.addAll(new_agents);
 	}
 	
 	private <T extends Agent> T find(int id, List<T> store) {
@@ -45,15 +44,25 @@ public class AgentRegistry {
 		return add(bay, unloadingBays);
 	}
 	
-	public void addUnloadingBays(UnloadingBay[] new_bays) {
+	public void addUnloadingBays(List<UnloadingBay> new_bays) {
 		addAll(new_bays, unloadingBays);
+	}
+	
+	public UnloadingBay nextEmpyBay() {
+		for (UnloadingBay bay : unloadingBays) {
+			if (!bay.isOccupied()) {
+				return bay;
+			}
+		}
+		// return null if no empty bay is available
+		return null;
 	}
 	
 	public boolean addWorkSite(WorkSite site) {
 		return add(site, worksites);
 	}
 	
-	public void addWorkSites(WorkSite[] new_sites) {
+	public void addWorksites(List<WorkSite> new_sites) {
 		addAll(new_sites, worksites);
 	}
 	
@@ -69,7 +78,7 @@ public class AgentRegistry {
 		return add(entr, entrances);
 	}
 	
-	public void addEntrances(Gate[] new_entrs) {
+	public void addEntrances(List<Gate> new_entrs) {
 		addAll(new_entrs, entrances);
 	}
 	
@@ -81,7 +90,7 @@ public class AgentRegistry {
 		return add(exit, exits);
 	}
 	
-	public void addExits(Gate[] new_exits) {
+	public void addExits(List<Gate> new_exits) {
 		addAll(new_exits, exits);
 	}
 	
@@ -93,15 +102,8 @@ public class AgentRegistry {
 		return add(store, tempStorages);
 	}
 	
-	public void addTempStorages(TempStorage[] new_stores) {
+	public void addTempStorages(List<TempStorage> new_stores) {
 		addAll(new_stores, tempStorages);
 	}
 
-	public UnloadingBay nextEmpyBay() {
-		for (UnloadingBay bay : unloadingBays) {
-			if (!bay.occupied()) return bay;
-		}
-		return null;
-	}
-	
 }

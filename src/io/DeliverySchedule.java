@@ -17,9 +17,8 @@ public class DeliverySchedule {
 	private Queue<String[]> deliverySchedule = new LinkedList<String[]>();
 	
 	private static final int schedule_fields = 5;
-
-	public DeliverySchedule(String path) {
-		deliverySchedulPath = new File(path).getAbsoluteFile();
+	
+	private void readSchedule() {
 		try {
 			deliverySchedule.addAll(CSVFile.readCSV(deliverySchedulPath, schedule_fields));
 		} catch (IOException ex) {
@@ -27,7 +26,13 @@ public class DeliverySchedule {
 			System.exit(-1);
 		}
 	}
+
+	public DeliverySchedule(String path) {
+		deliverySchedulPath = new File(path).getAbsoluteFile();
+		readSchedule();
+	}
 	
+	// TODO: there is a problem, this will not repeat, the truck can only be exhausted once.
 	public boolean hasNext() {
 		return (deliverySchedule.peek() != null) ? true : false;
 	}

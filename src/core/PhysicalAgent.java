@@ -7,13 +7,11 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
-import sim.field.continuous.Continuous2D;
 import sim.portrayal.DrawInfo2D;
 import sim.portrayal.Portrayal;
 import sim.portrayal.simple.RectanglePortrayal2D;
 import sim.util.Double2D;
 import sim.util.MutableDouble2D;
-import util.MutableSE2;
 
 public class PhysicalAgent extends Agent {
 	private static final long serialVersionUID = 2866787838674156110L;
@@ -21,7 +19,7 @@ public class PhysicalAgent extends Agent {
 	public double scale = 4;
 	public Shape shape; 
     public double orientation;
-    public MutableDouble2D velocity;
+    public MutableDouble2D velocity = new MutableDouble2D();
     public double angularRate;
     
     /** Rotates (using orientation), translates, and scales the shape as requested, then returns the
@@ -46,71 +44,31 @@ public class PhysicalAgent extends Agent {
     	return getLocatedArea(loc.x, loc.y, 1.0, 1.0);
     }
     
+    public void setPositionAndOrientation(Double2D pos, double orient) {
+    	_siteState.getArea().setObjectLocation(this, pos);
+    	orientation = orient;
+    }
     
-    // ---------------------------------------------------------------- -------------------------------- 
-    // Start of the old staff ------------------------------------------------------------
-    // ---------------------------------------------------------------- -------------------------------- 
-	
-	// The pose of the agent
-	private MutableSE2 positionAndOrientation = new MutableSE2();
-	
+    public void setPositionAndOrientation(PhysicalAgent dest) {
+    	setPositionAndOrientation(dest.getPosition(), dest.getOrientation());
+    }
+    
+    public Double2D getPosition() {
+    	return _siteState.getArea().getObjectLocation(this);
+    }
+    
+    public double getOrientation() {
+    	return orientation;
+    }
+    
 	public PhysicalAgent() {
 		super();
 		shape = new Rectangle.Double(-3,-3,5,5);
-		updatePositionAndOrientation();
 	}
 	
 	public PhysicalAgent(String name, int id) {
 		super(name, id);
 		shape = new Rectangle.Double(-3,-3,5,5);
-		updatePositionAndOrientation();
-	}
-	
-	public MutableSE2 getPositionAndOrientation()
-	{
-		return positionAndOrientation;
-	}
-
-	public void setPositionAndOrientation(MutableSE2 positionAndOrientation_)
-	{
-		positionAndOrientation.set(positionAndOrientation_);
-		updatePositionAndOrientation();
-	}
-	
-	public void setPositionAndOrientation(double x, double y, double theta)
-	{
-		positionAndOrientation.set(x, y, theta);
-		updatePositionAndOrientation();
-	}
-
-	public void setPosition(MutableDouble2D position)
-	{
-		positionAndOrientation.setPosition(position);
-		updatePositionAndOrientation();
-	}
-
-	public double getOrientation()
-	{
-		return positionAndOrientation.getOrientation();
-	}
-
-	public void setOrientation(double theta)
-	{
-		positionAndOrientation.setOrientation(theta);
-		updatePositionAndOrientation();
-	}
-
-	// This method handles updates associated with changing the pose -
-	// the site is updated, and any associated objects are updated as
-	// well.
-	private void updatePositionAndOrientation()
-	{
-		// Commit the change to the agent position into the construction site area
-		if (_siteState != null)
-		{
-			Continuous2D area = _siteState.getArea();
-			area.setObjectLocation(this, new Double2D(positionAndOrientation.getPosition()));
-		}
 	}
 	
 	public static Portrayal drawSelf() {

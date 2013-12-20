@@ -1,23 +1,17 @@
 package core;
 
-import java.io.IOException;
-
-import objects.Gate;
-import objects.TempStorage;
 import objects.Truck;
-import objects.UnloadingBay;
-import objects.WorkSite;
 
 public class ScenarioGenerator {
 
-	public static void populatePlaces(ConstructionSiteState site) throws IOException {
+	public static void populatePlaces(ConstructionSiteState site) {
 		System.out.println("Generating Site ...");
 
 		// unloading bays
 		site.agentReg.addUnloadingBays(ConstructionSiteState.siteLayout.genUnloadingBays(site));
 		
 		// work sites
-		site.agentReg.addWorkSites(ConstructionSiteState.siteLayout.genWorkSites(site));
+		site.agentReg.addWorksites(ConstructionSiteState.siteLayout.genWorkSites(site));
 
 		// temp storages
 		site.agentReg.addTempStorages(ConstructionSiteState.siteLayout.genTempStorages(site));

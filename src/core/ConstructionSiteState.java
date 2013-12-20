@@ -72,11 +72,7 @@ public class ConstructionSiteState extends SimState {
 
 		siteArea.clear();
 
-		try {
-			ScenarioGenerator.populatePlaces(this);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ScenarioGenerator.populatePlaces(this);
 		
 		ScenarioGenerator.populateVehicles(this);
 	}

@@ -15,6 +15,10 @@ public class Agent extends SimplePortrayal2D implements Steppable {
 		name = name_;
 		id = id_;
 	}
+	
+	public void setID(int id_) {
+		id = id_;
+	}
 
 	public int getID() {
 		return id;
@@ -51,7 +55,7 @@ public class Agent extends SimplePortrayal2D implements Steppable {
 	// The name of the agent
 	protected String name;
 	
-    public Stoppable stopper;
+    protected Stoppable stopper;
 
 	private static final long serialVersionUID = -5105695998369725761L;
 }

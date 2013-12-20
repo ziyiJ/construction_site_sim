@@ -1,11 +1,13 @@
 package objects;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import org.joda.time.LocalDateTime;
-import org.joda.time.Seconds;
 
 import sim.engine.SimState;
+import sim.portrayal.DrawInfo2D;
 import util.TimeConvert;
-
 import core.ConstructionSiteState;
 import core.Vehicle;
 
@@ -22,6 +24,10 @@ public class Truck extends Vehicle {
 	private Gate entrance;
 
 	private Gate exit;
+	
+	private UnloadingBay bay;
+	
+	private boolean canGo = false;
 
 	private String nick_name;
 
@@ -47,7 +53,11 @@ public class Truck extends Vehicle {
 	public void setExit(Gate gate) {
 		exit = gate;
 	}
-
+	
+	public void setBay(UnloadingBay dest) {
+		bay = dest;
+	}
+	
 	@Override
 	public void setSiteState(ConstructionSiteState site) {
 		super.setSiteState(site);
@@ -66,32 +76,66 @@ public class Truck extends Vehicle {
 	public void schuleArriving() {
 		_siteState.schedule.scheduleOnce(sim_arriving_time, this);
 	}
+	
+	public void stop(Gate gate) {
+		canGo = false;
+	}
+	
+	public void throughGate(Gate gate) {
+		canGo = true;
+	}
+	
+	private void routineArriving() {
+		System.out.println(this.toString() + " Arriving at " + _siteState.currentTime());
+		entrance.checkIn(this);
+		stopper = _siteState.schedule.scheduleRepeating(this);
+
+		status = TRUCK_STATUS.QUEUING_AT_ENTRANCE;
+	}
+	
+	private void routineQueuingAtEntrance() {
+		System.out.println(this.toString() + "  Queuing at  " + entrance.toString());
+		if (canGo) {
+			System.out.println(this.toString() + " On route to " + bay.toString());
+			bay.occupy(this);
+			status = TRUCK_STATUS.MOVING_TO_BAY;
+		}
+	}
 
 	@Override
 	public void step(SimState state) {
 		switch (status) {
 		case ARRIVING:
-			System.out.println(this.toString() + " Arriving at " + _siteState.currentTime() + " from " + entrance.toString());
+			routineArriving();
 			break;
 
 		case QUEUING_AT_ENTRANCE:
-			
+			routineQueuingAtEntrance();
 			break;
 
 		case MOVING_TO_BAY:
-			
+			if (moveStep()) {
+				System.out.println(this.toString() + " Arrived @ "+ _siteState.currentTime());
+				status = TRUCK_STATUS.AT_BAY;
+			}
 			break;
 
 		case AT_BAY:
-			
+			setDestination(exit);
+			bay.clear(this);
+			status = TRUCK_STATUS.MOVING_TO_EXIT;
 			break;
 
 		case MOVING_TO_EXIT:
-			
+			if (moveStep()) {
+				System.out.println(this.toString() + " Arrived @ "+ _siteState.currentTime());
+				status = TRUCK_STATUS.QUEUING_AT_EXIT;
+			}
 			break;
 
 		case QUEUING_AT_EXIT:
-			
+			stopper.stop();
+			_siteState.getArea().remove(this);
 			break;
 
 		case LEFT:
@@ -102,8 +146,16 @@ public class Truck extends Vehicle {
 			break;
 		}
 	}
-
+	
 	public void init() {
 	}
 
+	public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
+		setScale(0.4);
+		super.draw(object, graphics, info);
+	}
+
+	public Color getColor() {
+		return Color.orange;
+	}
 }

@@ -31,12 +31,15 @@ public class ConstructionSiteState extends SimState {
 	public static final String P_SEED = "seed";
 	public static final String P_STIME = "StartTime";
 	public static final String V_TIME = "time";
+	public static final String P_FORKLIFT_NO = "ForkLiftNum";
 	
 	// Simulation parameters
 	private long simSeed = 12345;
 	private double siteWidth = 100;
 	private double siteHeigh = 100;
 	private LocalDateTime startTime = new LocalDateTime();
+	private int forkLiftNum = 2;
+
 	// 
 	public AgentRegistry agentReg = new AgentRegistry();
 
@@ -170,5 +173,13 @@ public class ConstructionSiteState extends SimState {
 
 	public void setSiteHeigh(double siteHeigh) {
 		this.siteHeigh = siteHeigh;
+	}
+
+	public int getForkLiftNum() {
+		return forkLiftNum;
+	}
+
+	public void setForkLiftNum(int forkLiftNum) {
+		this.forkLiftNum = forkLiftNum;
 	}
 }

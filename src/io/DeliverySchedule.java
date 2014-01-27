@@ -2,11 +2,12 @@ package io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import core.ConstructionSiteState;
-
 import objects.Truck;
 
 public class DeliverySchedule {
@@ -14,13 +15,16 @@ public class DeliverySchedule {
 	
 	private Truck next_truck;
 	
-	private Queue<String[]> deliverySchedule = new LinkedList<String[]>();
+	private ArrayList<String[]> deliverySchedule = new ArrayList<String[]>();
 	
-	private static final int schedule_fields = 5;
+	private int schedule_index = 0;
+	
+	// TODO: do I really need this rigid field num? or do I need a new format?
+//	private static final int schedule_fields = 5;
 	
 	private void readSchedule() {
 		try {
-			deliverySchedule.addAll(CSVFile.readCSV(deliverySchedulPath, schedule_fields));
+			deliverySchedule.addAll(CSVFile.readCSV(deliverySchedulPath));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			System.exit(-1);
@@ -30,22 +34,33 @@ public class DeliverySchedule {
 	public DeliverySchedule(String path) {
 		deliverySchedulPath = new File(path).getAbsoluteFile();
 		readSchedule();
+		schedule_index = 0;
 	}
 	
-	// TODO: there is a problem, this will not repeat, the truck can only be exhausted once.
+	// FIXME: there is a problem, this will not repeat, the truck can only be exhausted once.
 	public boolean hasNext() {
-		return (deliverySchedule.peek() != null) ? true : false;
+		if (deliverySchedule.size() != schedule_index+1) {
+			return true;
+		}
+		else {
+			schedule_index = 0;
+			return false;
+		}
 	}
 	
 	public Truck nextTruck(ConstructionSiteState site) {
 		if (!hasNext()) return null;
 
-		String[] line = deliverySchedule.poll();
+		String[] line = deliverySchedule.get(schedule_index);
+		schedule_index += 1;
 		try {
+			// anything other than contents of pallets
 			next_truck = new Truck(Integer.parseInt(line[0]), line[1], line[2]);
 			next_truck.setEntrance(site.agentReg.findEntrance(Integer.parseInt(line[3])));
 			next_truck.setExit(site.agentReg.findExit(Integer.parseInt(line[4])));
 			next_truck.setSiteState(site);
+			
+			//
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();

@@ -2,6 +2,7 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import org.joda.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ public class Truck extends Vehicle {
 
 	private static final long serialVersionUID = -1875286739196648019L;
 
-	private enum TRUCK_STATUS {
+	private static enum TRUCK_STATUS {
 		ARRIVING, QUEUING_AT_ENTRANCE, MOVING_TO_BAY, AT_BAY, MOVING_TO_EXIT, QUEUING_AT_EXIT, LEFT
 	}
 
@@ -34,6 +35,8 @@ public class Truck extends Vehicle {
 	private LocalDateTime arriving_time;
 
 	private double sim_arriving_time;
+	
+	private ArrayList<Pallet> trunk = new ArrayList<Pallet>();
 
 	public Truck() {
 		this(-1, "", "");
@@ -56,6 +59,10 @@ public class Truck extends Vehicle {
 	
 	public void setBay(UnloadingBay dest) {
 		bay = dest;
+	}
+	
+	public void loadTruck(ArrayList<Pallet> goods) {
+		trunk = goods;
 	}
 	
 	@Override

@@ -6,7 +6,6 @@ import java.util.Comparator;
 
 import sim.engine.SimState;
 import sim.portrayal.DrawInfo2D;
-import core.AgentRegistry;
 import core.Place;
 
 public class UnloadingBay extends Place {

@@ -14,6 +14,7 @@ public class Gate extends Place {
 	
 	private Queue<Truck> queue = new LinkedList<Truck>();
 	
+	// FIXME: this is a bit ugly, maybe to put it into a different subclass
 	private boolean is_exit = false;
 
 	public Gate() {

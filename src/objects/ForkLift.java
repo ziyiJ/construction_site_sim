@@ -3,8 +3,6 @@ package objects;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import javax.activity.InvalidActivityException;
-
 import sim.engine.SimState;
 import sim.portrayal.DrawInfo2D;
 import core.ConstructionSiteState;
@@ -15,7 +13,7 @@ public class ForkLift extends Vehicle{
 	private Pallet cargo;
 	
 	private static enum FORKLIFT_STATUS {
-		MOVING_TO_BAY, MOVING_TO_SITE, AT_BAY, AT_SITE, IDLE
+		MOVING_TO_BAY, MOVING_TO_SITE, MOVING_TO_TEMP_STORE, AT_BAY, AT_SITE, AT_TEMP_STORE, IDLE
 	}
 	
 	private FORKLIFT_STATUS status;
@@ -62,25 +60,27 @@ public class ForkLift extends Vehicle{
 		// if we can get a cargo from the truck, start moving to dest
 		// FIXME: there is a chance the truck will be null, find a better solution!!
 		if(truck != null && truck.unload(this)) {
-			// check if the site queue is full
 			dest_site = cargo.getDestination();
-			setDestination(dest_site);
-			status = FORKLIFT_STATUS.MOVING_TO_SITE;
+			// Move to site only if the site queue is empty
+			if (dest_site.canTakeInCargo()) {
+				setDestination(dest_site);
+				status = FORKLIFT_STATUS.MOVING_TO_SITE;
+			}
+			else {
+				dest_temp_store = _siteState.agentReg.getUsableTempStorages();
+				// FIXME: What if we cannot find a usable temp store?
+//				if (dest_temp_store == null) 
+				setDestination(dest_temp_store);
+			}
 		}
 		else {
 			status = FORKLIFT_STATUS.IDLE;
 		}
 	}
 	
-	// TODO: a prettier way?
 	private void routineAtSite() {
 		if (dest_site.canTakeInCargo()) {
-			try {
-				dest_site.takeInCargo(this);
-			}
-			catch (InvalidActivityException e) {
-				return;
-			}
+			dest_site.takeInCargo(this);
 			status = FORKLIFT_STATUS.IDLE;
 		}
 	}

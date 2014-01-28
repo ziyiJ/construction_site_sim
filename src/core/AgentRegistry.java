@@ -117,7 +117,7 @@ public class AgentRegistry {
 	public Gate findExit(int id) {
 		return find(id, exits);
 	}
-
+	
 	public boolean addTempStorage(TempStorage store) {
 		return add(store, tempStorages);
 	}
@@ -125,6 +125,16 @@ public class AgentRegistry {
 	public void addTempStorages(List<TempStorage> new_stores) {
 		addAll(new_stores, tempStorages);
 	}
+
+	// TODO: is this the best way to get hold of a usable temperay store?
+	public TempStorage getUsableTempStorages() {
+		for (TempStorage store : tempStorages) {
+			if (store.canTakeInCargo())
+				return store;
+		}
+		return null;
+	}
+
 
 	public boolean addForkLift(ForkLift new_forklift) {
 		return add(new_forklift, forklifts);

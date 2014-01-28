@@ -34,8 +34,7 @@ public class TempStorage extends Place {
 		storage_place.clear();
 	}
 	
-	// TODO: get a proper exception type!!
-	public void takeInCargo(ForkLift vehicle) throws Exception {
+	public void takeInCargo(ForkLift vehicle) {
 		if (vehicle == null) {
 			throw new IllegalArgumentException(toString() + " cannot take null ForkLift!");
 		}
@@ -44,7 +43,7 @@ public class TempStorage extends Place {
 			storage_place.add(vehicle.unloadCargo());
 		}
 		else {
-			throw new Exception(toString() + " storage capacity breached!");
+			throw new IllegalAccessError(toString() + " storage capacity breached!");
 		}
 	}
 	

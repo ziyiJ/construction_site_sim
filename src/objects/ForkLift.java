@@ -97,14 +97,14 @@ public class ForkLift extends Vehicle{
 		switch (status) {
 		case MOVING_TO_BAY:
 			if (moveStep()) {
-				System.out.println(this.toString() + " Arrived @ "+ _siteState.currentTime());
+				System.out.println(this.toString() + " Arriving " + dest_bay + " @ "+ _siteState.currentTime());
 				status = FORKLIFT_STATUS.AT_BAY;
 			}
 			break;
 
 		case MOVING_TO_SITE:
 			if (moveStep()) {
-				System.out.println(this.toString() + " Arrived @ "+ _siteState.currentTime());
+				System.out.println(this.toString() + " Arriving " + dest_site + " @ "+ _siteState.currentTime());
 				status = FORKLIFT_STATUS.AT_SITE;
 			}
 			break;

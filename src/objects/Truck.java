@@ -41,7 +41,7 @@ public class Truck extends Vehicle {
 	// TODO: truck handling type;
 	// TODO: truck type;
 	
-	// TODO: currently there is no size limit on truck, do we need to?
+	// TODO: add a limited size storage interface?
 	private Queue<Pallet> trunk = new LinkedList<Pallet>();
 	
 	private int trunk_capacity = 5;
@@ -55,6 +55,12 @@ public class Truck extends Vehicle {
 		this.nick_name = nick_name;
 		this.arriving_time = LocalDateTime.parse(time_str);
 		this.status = TRUCK_STATUS.ARRIVING;
+	}
+	
+	// set new trunk capacity always clears the queue
+	public void setQueueCapacity(int new_capacity) {
+		trunk_capacity = new_capacity;
+		trunk.clear();
 	}
 	
 	public void setEntrance(Gate gate) {
@@ -84,7 +90,17 @@ public class Truck extends Vehicle {
 		if (good == null) {
 			throw new IllegalArgumentException(toString() + " cannot load null good!");
 		}
-		trunk.offer(good);
+		if (trunk.size() < trunk_capacity) {
+			trunk.offer(good);
+		}
+		else {
+			throw new IllegalAccessError(toString() + " trunk capacity breached!");
+		}
+	}
+	
+	// check if our trunk is full
+	public boolean canTakeInCargo() {
+		return (trunk.size() < trunk_capacity)? true : false;
 	}
 	
 	public void displayTrunk() {
@@ -118,7 +134,7 @@ public class Truck extends Vehicle {
 	// add a simple counter display to the site
 	// TODO: is there a fancier way to do it?
 	public String toString() {
-		return super.toString() + "-" + nick_name + " [" + consumption_line.size() + "/" + queue_capacity + "]";
+		return super.toString() + "-" + nick_name + " [" + trunk.size() + "/" + trunk_capacity + "]";
 	}
 
 	public LocalDateTime arrivedAt() {
@@ -138,7 +154,7 @@ public class Truck extends Vehicle {
 	}
 	
 	private void routineArriving() {
-		System.out.println(this.toString() + " Arriving at " + _siteState.currentTime());
+		System.out.println(this.toString() + " Arriving " + entrance + " @ " + _siteState.currentTime());
 		entrance.checkIn(this);
 		stopper = _siteState.schedule.scheduleRepeating(this);
 
@@ -146,7 +162,7 @@ public class Truck extends Vehicle {
 	}
 	
 	private void routineQueuingAtEntrance() {
-		System.out.println(this.toString() + "  Queuing at  " + entrance.toString());
+//		System.out.println(this.toString() + "  Queuing at  " + entrance.toString());
 		if (canGo) {
 			System.out.println(this.toString() + " On route to " + bay.toString());
 			bay.occupy(this);
@@ -157,6 +173,7 @@ public class Truck extends Vehicle {
 	private void routineAtBay() {
 		// only start moving to the exit if the truck is empty
 		if (trunk.isEmpty()) {
+			System.out.println(this.toString() + " On route to " + exit);
 			setDestination(exit);
 			bay.clear(this);
 			status = TRUCK_STATUS.MOVING_TO_EXIT;
@@ -176,7 +193,7 @@ public class Truck extends Vehicle {
 
 		case MOVING_TO_BAY:
 			if (moveStep()) {
-				System.out.println(this.toString() + " Arrived @ "+ _siteState.currentTime());
+				System.out.println(this.toString() + " Arriving " + bay  + " @ " + _siteState.currentTime());
 				status = TRUCK_STATUS.AT_BAY;
 			}
 			break;
@@ -187,7 +204,7 @@ public class Truck extends Vehicle {
 
 		case MOVING_TO_EXIT:
 			if (moveStep()) {
-				System.out.println(this.toString() + " Arrived @ "+ _siteState.currentTime());
+				System.out.println(this.toString() + " Arriving " + exit + " @ " + _siteState.currentTime());
 				status = TRUCK_STATUS.QUEUING_AT_EXIT;
 			}
 			break;

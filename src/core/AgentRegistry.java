@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import objects.Entrance;
+import objects.Exit;
 import objects.ForkLift;
 import objects.Gate;
 import objects.TempStorage;
@@ -20,9 +22,9 @@ public class AgentRegistry {
 	
 	private List<Truck> trucks = new ArrayList<Truck>();
 	
-	private List<Gate> entrances = new ArrayList<Gate>();
+	private List<Entrance> entrances = new ArrayList<Entrance>();
 	
-	private List<Gate> exits = new ArrayList<Gate>();
+	private List<Exit> exits = new ArrayList<Exit>();
 	
 	private List<TempStorage> tempStorages = new ArrayList<TempStorage>();
 	
@@ -91,11 +93,11 @@ public class AgentRegistry {
 		return find(id, trucks);
 	}
 	
-	public boolean addEntrance(Gate entr) {
+	public boolean addEntrance(Entrance entr) {
 		return add(entr, entrances);
 	}
 	
-	public void addEntrances(List<Gate> new_entrs) {
+	public void addEntrances(List<Entrance> new_entrs) {
 		addAll(new_entrs, entrances);
 	}
 	
@@ -103,11 +105,11 @@ public class AgentRegistry {
 		return find(id, entrances);
 	}
 	
-	public boolean addExit(Gate exit) {
+	public boolean addExit(Exit exit) {
 		return add(exit, exits);
 	}
 	
-	public void addExits(List<Gate> new_exits) {
+	public void addExits(List<Exit> new_exits) {
 		addAll(new_exits, exits);
 	}
 	

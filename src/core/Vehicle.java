@@ -40,7 +40,7 @@ public class Vehicle extends PhysicalAgent {
 	    
 	    // TODO: a better model?
 	    // update the speed of vehicle
-	    velocity.setTo(delta.x * 0.02, delta.y * 0.02);;
+	    velocity.setTo(delta.x * 0.002, delta.y * 0.002);;
 	    
 	    // TODO: avoidance?
 	    

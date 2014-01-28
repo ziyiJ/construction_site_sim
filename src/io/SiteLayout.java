@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.ConstructionSiteState;
-import core.PhysicalAgent;
 import core.Place;
-import objects.Gate;
+import objects.Entrance;
+import objects.Exit;
 import objects.TempStorage;
 import objects.UnloadingBay;
 import objects.WorkSite;
@@ -86,12 +86,12 @@ public class SiteLayout {
 		return genAgents(site, unloadingbaysLayout, unloadingbays_file_fields, UnloadingBay.class);
 	}
 	
-	public List<Gate> genSiteEntrances(ConstructionSiteState site) {
-		return genAgents(site, siteentranceLayout, siteentrance_file_fields, Gate.class);
+	public List<Entrance> genSiteEntrances(ConstructionSiteState site) {
+		return genAgents(site, siteentranceLayout, siteentrance_file_fields, Entrance.class);
 	}
 	
-	public List<Gate> genSiteExits(ConstructionSiteState site) {
-		return genAgents(site, siteexitLayout, siteexit_file_fields, Gate.class);
+	public List<Exit> genSiteExits(ConstructionSiteState site) {
+		return genAgents(site, siteexitLayout, siteexit_file_fields, Exit.class);
 	}
 	
 }

@@ -14,20 +14,16 @@ public class Gate extends Place {
 	
 	private Queue<Truck> queue = new LinkedList<Truck>();
 	
-	// FIXME: this is a bit ugly, maybe to put it into a different subclass
-	private boolean is_exit = false;
-
 	public Gate() {
 		this(-1);
 	}
 	
 	public Gate(int id) {
-		super("Entrance", id);
+		super("Gate", id);
 	}
 	
-	public Gate(int id, boolean gate_is_exit) {
-		super("Exit", id);
-		is_exit = gate_is_exit;
+	protected Gate(String name, int id) {
+		super(name, id);
 	}
 	
 	// when tuck first arrive at the door it must check in

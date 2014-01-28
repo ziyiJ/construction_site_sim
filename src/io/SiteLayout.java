@@ -45,7 +45,7 @@ public class SiteLayout {
 	
 	// A general agent production methods
 	private <T extends Place> List<T> genAgents(ConstructionSiteState site, File layout, int fields, 
-			Class<T> type) {
+			Class<T> type, double work_freq) {
 		List<T> agents = new ArrayList<T>();
 
 		try {
@@ -54,8 +54,7 @@ public class SiteLayout {
 				T new_agent = type.newInstance();
 				new_agent.setID(Integer.parseInt(line[1]));
 				new_agent.setSiteState(site);
-				// TODO: a better way to have different site with different rate of working!!
-				new_agent.startWorking(5000);
+				new_agent.startWorking(work_freq);
 				new_agent.setPositionAndOrientation(
 						new Double2D(Double.parseDouble(line[2]), Double.parseDouble(line[3])), 
 						Double.parseDouble(line[4]));
@@ -74,24 +73,26 @@ public class SiteLayout {
 		return agents;
 	}
 	
+	// TODO: Add a proper work frequency setting mechanism for different places.
+	
 	public List<WorkSite> genWorkSites(ConstructionSiteState site) {
-		return genAgents(site, worksitesLayout, worksites_file_fields, WorkSite.class);
+		return genAgents(site, worksitesLayout, worksites_file_fields, WorkSite.class, 5000);
 	}
 	
 	public List<TempStorage> genTempStorages(ConstructionSiteState site) {
-		return genAgents(site, tempstoragesLayout, temstorages_file_fields, TempStorage.class);
+		return genAgents(site, tempstoragesLayout, temstorages_file_fields, TempStorage.class, 1);
 	}
 
 	public List<UnloadingBay> genUnloadingBays(ConstructionSiteState site) {
-		return genAgents(site, unloadingbaysLayout, unloadingbays_file_fields, UnloadingBay.class);
+		return genAgents(site, unloadingbaysLayout, unloadingbays_file_fields, UnloadingBay.class, 1);
 	}
 	
 	public List<Entrance> genSiteEntrances(ConstructionSiteState site) {
-		return genAgents(site, siteentranceLayout, siteentrance_file_fields, Entrance.class);
+		return genAgents(site, siteentranceLayout, siteentrance_file_fields, Entrance.class, 1);
 	}
 	
 	public List<Exit> genSiteExits(ConstructionSiteState site) {
-		return genAgents(site, siteexitLayout, siteexit_file_fields, Exit.class);
+		return genAgents(site, siteexitLayout, siteexit_file_fields, Exit.class, 1);
 	}
 	
 }

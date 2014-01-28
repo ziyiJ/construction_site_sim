@@ -72,7 +72,7 @@ public class ForkLift extends Vehicle{
 		}
 	}
 	
-	// FIXME: a prettier way?
+	// TODO: a prettier way?
 	private void routineAtSite() {
 		if (dest_site.canTakeInCargo()) {
 			try {

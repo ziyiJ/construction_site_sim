@@ -28,6 +28,10 @@ public class Gate extends Place {
 	
 	// when tuck first arrive at the door it must check in
 	public boolean checkIn(Truck t) {
+		if (t == null) {
+			throw new IllegalArgumentException(toString() + " cannot check-in a null truck!");
+		}
+
 		if (queue.contains(t)) return false; 
 		t.setPositionAndOrientation(this);
 		t.stop(this);
@@ -42,6 +46,7 @@ public class Gate extends Place {
 			// set the signal in the truck that it can go
 			next_to_go.throughGate(this);
 			// tell the truck where to go
+			dest.designate(next_to_go);
 			next_to_go.setDestination(dest);
 			next_to_go.setBay(dest);
 		}

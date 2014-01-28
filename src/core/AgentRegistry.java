@@ -12,6 +12,7 @@ import objects.TempStorage;
 import objects.Truck;
 import objects.UnloadingBay;
 import objects.WorkSite;
+import objects.UnloadingBay.BAY_STATUS;
 
 public class AgentRegistry {
 	// TODO: a better way to maintain the code?
@@ -55,7 +56,7 @@ public class AgentRegistry {
 	
 	public UnloadingBay nextEmptyBay() {
 		for (UnloadingBay bay : unloadingBays) {
-			if (!bay.isOccupied()) {
+			if (bay.getStatus() == BAY_STATUS.EMPTY) {
 				return bay;
 			}
 		}
@@ -65,7 +66,7 @@ public class AgentRegistry {
 	
 	public UnloadingBay nextOccupiedBay() {
 		for (UnloadingBay bay : unloadingBays) {
-			if (bay.isOccupied()) {
+			if (bay.getStatus() == BAY_STATUS.OCCUPIED) {
 				return bay;
 			}
 		}

@@ -3,9 +3,6 @@ package io;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import core.ConstructionSiteState;
 import objects.Pallet;
@@ -19,9 +16,6 @@ public class DeliverySchedule {
 	private ArrayList<String[]> deliverySchedule = new ArrayList<String[]>();
 	
 	private int schedule_index = 0;
-	
-	// TODO: do I really need this rigid field num? or do I need a new format?
-//	private static final int schedule_fields = 5;
 	
 	private void readSchedule() {
 		try {
@@ -70,7 +64,7 @@ public class DeliverySchedule {
 				
 				next_truck.load(tmp);
 			}
-//			next_truck.displayTrunk();
+			next_truck.displayTrunk();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();

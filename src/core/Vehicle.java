@@ -38,12 +38,13 @@ public class Vehicle extends PhysicalAgent {
 	    // If this is below a small value, we have arrived, return true
 	    if (delta.length() < 4) return true;
 	    
-	    // TODO: a better model?
+	    // FIXME: a better model allow different speed for different vehicle class
 	    // update the speed of vehicle
-	    velocity.setTo(delta.x * 0.002, delta.y * 0.002);;
+	    velocity.setTo(delta.x * 0.004, delta.y * 0.004);;
 	    
-	    // TODO: avoidance?
+	    // FIXME: avoidance?
 	    
+	    // FIXME: orientation?
 //		orientation += angularRate;
 	    // update the vehicle location
 		Double2D location = _siteState.getArea().getObjectLocation(this);

@@ -2,26 +2,20 @@ package objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Comparator;
 
 import sim.portrayal.DrawInfo2D;
 import core.Place;
 
 public class UnloadingBay extends Place {
 	
-	public static Comparator<UnloadingBay> UnloadingBayComparator 
-	= new Comparator<UnloadingBay>() {
-
-		@Override
-		public int compare(UnloadingBay o1, UnloadingBay o2) {
-			if (o1.isOccupied() == o2.isOccupied())
-				return (o1.getID() - o2.getID());
-			else 
-				return (o1.isOccupied())? -1 : 1;
-		}
-	};
+	private Truck occupying_truck = null;
+	private Truck designated_truck = null;
 	
-	private Truck occupying_truck;
+	// note there is a chance the bay is designated but not yet occupied. 
+	public static enum BAY_STATUS {
+		EMPTY, DESIGNATED, OCCUPIED 
+	}
+	private BAY_STATUS status = BAY_STATUS.EMPTY;
 
 	public UnloadingBay() {
 		this(-1);
@@ -31,13 +25,13 @@ public class UnloadingBay extends Place {
 		super("UnloadingBay", id);
 	}
 	
-	public UnloadingBay(int id, boolean initial_state) {
+	public UnloadingBay(int id, BAY_STATUS initial_state) {
 		this(id);
-		isOccupied = initial_state;
+		status = initial_state;
 	}
 	
-	public boolean isOccupied() {
-		return isOccupied;
+	public BAY_STATUS getStatus() {
+		return status;
 	}
 	
 	// Note this will return a null pointer if it is not yet occupied!!!!
@@ -45,31 +39,54 @@ public class UnloadingBay extends Place {
 		return occupying_truck;
 	}
 	
-	// Interaction with a truck
+	public Truck whoIsDesignated() {
+		return designated_truck;
+	}
+	
+	// Assign the bay for a truck to use
+	public boolean designate(Truck truck) {
+		if (truck == null) {
+			throw new IllegalArgumentException(toString() + " cannot be designated to a null truck!");
+		}
+		
+		// fail to designate either with an assigned designated_truck or status is not empty
+		if (designated_truck != null || status != BAY_STATUS.EMPTY) return false;
+		
+		status = BAY_STATUS.DESIGNATED;
+		designated_truck = truck;
+		return true;
+	}
+	
+	// let the truck occupied this bay
 	public boolean occupy(Truck truck) {
 		if (truck == null) {
 			throw new IllegalArgumentException(toString() + " cannot be occupied by a null truck!");
 		}
 
 		// report fail if is already occupied
-		if (isOccupied) return false;
+		if (status == BAY_STATUS.OCCUPIED) return false;
+		// report fail if incoming truck is different to assigned.
+		if (status == BAY_STATUS.DESIGNATED && designated_truck != truck) return false;
 		
-		isOccupied = true;
+		status = BAY_STATUS.OCCUPIED;
 		occupying_truck = truck;
 		return true;
 	}
 	
+	// clear the bay
 	public void clear(Truck truck) {
 		if (truck == null) {
 			throw new IllegalArgumentException(toString() + " cannot be cleared by a null truck!");
 		}
+
+		// only the occupying truck can clear the bay
 		if (truck != occupying_truck) {
 			throw new IllegalArgumentException(toString() + " cannot be cleared by a different truck!");
 		}
 
-		isOccupied = false;
-		// TODO: is set to null the best way to do it?
+		status = BAY_STATUS.EMPTY;
 		occupying_truck = null;
+		designated_truck = null;
 	}
 	
 	public Color getColor() {
@@ -81,7 +98,6 @@ public class UnloadingBay extends Place {
 		super.draw(object, graphics, info);
 	}
 	
-	private boolean isOccupied = false;
 	
 	private static final long serialVersionUID = -8032859847481197708L;
 

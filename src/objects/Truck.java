@@ -165,7 +165,6 @@ public class Truck extends Vehicle {
 //		System.out.println(this.toString() + "  Queuing at  " + entrance.toString());
 		if (canGo) {
 			System.out.println(this.toString() + " On route to " + bay.toString());
-			bay.occupy(this);
 			status = TRUCK_STATUS.MOVING_TO_BAY;
 		}
 	}
@@ -194,6 +193,7 @@ public class Truck extends Vehicle {
 		case MOVING_TO_BAY:
 			if (moveStep()) {
 				System.out.println(this.toString() + " Arriving " + bay  + " @ " + _siteState.currentTime());
+				bay.occupy(this);
 				status = TRUCK_STATUS.AT_BAY;
 			}
 			break;

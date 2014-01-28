@@ -14,6 +14,11 @@ public class Place extends PhysicalAgent {
 		stopper = _siteState.schedule.scheduleRepeating(this);
 	}
 	
+	// Start working at a specified rate
+	public void startWorking(double working_interval) {
+		stopper = _siteState.schedule.scheduleRepeating(this, working_interval);
+	}
+	
 	public void stopWorking() {
 		stopper.stop();
 	}

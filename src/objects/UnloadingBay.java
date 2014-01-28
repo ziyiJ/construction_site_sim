@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Comparator;
 
-import sim.engine.SimState;
 import sim.portrayal.DrawInfo2D;
 import core.Place;
 
@@ -21,6 +20,8 @@ public class UnloadingBay extends Place {
 				return (o1.isOccupied())? -1 : 1;
 		}
 	};
+	
+	private Truck occupying_truck;
 
 	public UnloadingBay() {
 		this(-1);
@@ -35,26 +36,40 @@ public class UnloadingBay extends Place {
 		isOccupied = initial_state;
 	}
 	
-	public void step(SimState state) {
-	}
-	
 	public boolean isOccupied() {
 		return isOccupied;
 	}
 	
-	// FIXME: only the agentRegistry can alter the bay state, is this the best way?
-//	public boolean occupy(AgentRegistry reg) {
+	// Note this will return a null pointer if it is not yet occupied!!!!
+	public Truck whoIsOccupying() {
+		return occupying_truck;
+	}
+	
+	// Interaction with a truck
 	public boolean occupy(Truck truck) {
+		if (truck == null) {
+			throw new IllegalArgumentException(toString() + " cannot be occupied by a null truck!");
+		}
+
 		// report fail if is already occupied
 		if (isOccupied) return false;
 		
 		isOccupied = true;
+		occupying_truck = truck;
 		return true;
 	}
 	
-	// FIXME: only a truck can clear the bay state
 	public void clear(Truck truck) {
+		if (truck == null) {
+			throw new IllegalArgumentException(toString() + " cannot be cleared by a null truck!");
+		}
+		if (truck != occupying_truck) {
+			throw new IllegalArgumentException(toString() + " cannot be cleared by a different truck!");
+		}
+
 		isOccupied = false;
+		// TODO: is set to null the best way to do it?
+		occupying_truck = null;
 	}
 	
 	public Color getColor() {

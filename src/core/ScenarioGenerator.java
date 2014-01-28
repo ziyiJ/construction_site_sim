@@ -13,7 +13,7 @@ public class ScenarioGenerator {
 		site.agentReg.addUnloadingBays(ConstructionSiteState.siteLayout.genUnloadingBays(site));
 		
 		// work sites
-		site.agentReg.addWorksites(ConstructionSiteState.siteLayout.genWorkSites(site));
+		site.agentReg.addWorkSites(ConstructionSiteState.siteLayout.genWorkSites(site));
 
 		// temp storages
 		site.agentReg.addTempStorages(ConstructionSiteState.siteLayout.genTempStorages(site));
@@ -30,9 +30,11 @@ public class ScenarioGenerator {
 		while(ConstructionSiteState.deliverySchedule.hasNext()) {
 			Truck tmp = ConstructionSiteState.deliverySchedule.nextTruck(site);
 			tmp.schuleArriving();
+			site.agentReg.addTruck(tmp);
 		}
 		
 		// forklifts
+		// TODO: This is only for now
 		for(int i = 0; i != site.getForkLiftNum(); ++i) {
 			ForkLift tmp = new ForkLift(i+1);
 			//FIXME: this approach to set simstate is very prone to null pointer exception!!
@@ -40,6 +42,8 @@ public class ScenarioGenerator {
 			Double2D tmp_pos = new Double2D(Math.random()*site.getSiteWidth(), 
 					Math.random()*site.getSiteHeigh());
 			tmp.setPositionAndOrientation(tmp_pos, 0.0);
+			
+			site.agentReg.addForkLift(tmp);
 		}
 	}
 }

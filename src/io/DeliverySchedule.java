@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import core.ConstructionSiteState;
+import objects.Pallet;
 import objects.Truck;
 
 public class DeliverySchedule {
@@ -60,7 +61,16 @@ public class DeliverySchedule {
 			next_truck.setExit(site.agentReg.findExit(Integer.parseInt(line[4])));
 			next_truck.setSiteState(site);
 			
-			//
+			// constructing and loading pallets
+			int pallet_num = Integer.parseInt(line[7]);
+			for(int i = 0; i != pallet_num; ++i) {
+				Pallet tmp = new Pallet(Integer.parseInt(line[7 + 3*i + 1]),
+						line[7 + 3*i + 3]);
+				tmp.setDestination(site.agentReg.findWorkSite(Integer.parseInt(line[7 + 3*i + 2])));
+				
+				next_truck.load(tmp);
+			}
+//			next_truck.displayTrunk();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();

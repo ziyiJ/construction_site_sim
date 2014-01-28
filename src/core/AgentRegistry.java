@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import objects.ForkLift;
 import objects.Gate;
 import objects.TempStorage;
 import objects.Truck;
@@ -24,6 +25,8 @@ public class AgentRegistry {
 	private List<Gate> exits = new ArrayList<Gate>();
 	
 	private List<TempStorage> tempStorages = new ArrayList<TempStorage>();
+	
+	private List<ForkLift> forklifts = new ArrayList<ForkLift>();
 	
 	private <T extends Agent> boolean add(T new_agent, Collection<T> store) {
 		return store.add(new_agent);
@@ -48,7 +51,7 @@ public class AgentRegistry {
 		addAll(new_bays, unloadingBays);
 	}
 	
-	public UnloadingBay nextEmpyBay() {
+	public UnloadingBay nextEmptyBay() {
 		for (UnloadingBay bay : unloadingBays) {
 			if (!bay.isOccupied()) {
 				return bay;
@@ -58,12 +61,26 @@ public class AgentRegistry {
 		return null;
 	}
 	
+	public UnloadingBay nextOccupiedBay() {
+		for (UnloadingBay bay : unloadingBays) {
+			if (bay.isOccupied()) {
+				return bay;
+			}
+		}
+		// return null if no empty bay is available
+		return null;
+	}
+
 	public boolean addWorkSite(WorkSite site) {
 		return add(site, worksites);
 	}
 	
-	public void addWorksites(List<WorkSite> new_sites) {
+	public void addWorkSites(List<WorkSite> new_sites) {
 		addAll(new_sites, worksites);
+	}
+
+	public WorkSite findWorkSite(int id) {
+		return find(id, worksites);
 	}
 	
 	public boolean addTruck(Truck truck) {
@@ -106,4 +123,11 @@ public class AgentRegistry {
 		addAll(new_stores, tempStorages);
 	}
 
+	public boolean addForkLift(ForkLift new_forklift) {
+		return add(new_forklift, forklifts);
+	}
+	
+	public ForkLift findForkLift(int id) {
+		return find(id, forklifts);
+	}
 }

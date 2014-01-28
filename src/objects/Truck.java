@@ -3,6 +3,8 @@ package objects;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.joda.time.LocalDateTime;
 
@@ -36,7 +38,13 @@ public class Truck extends Vehicle {
 
 	private double sim_arriving_time;
 	
-	private ArrayList<Pallet> trunk = new ArrayList<Pallet>();
+	// TODO: truck handling type;
+	// TODO: truck type;
+	
+	// TODO: currently there is no size limit on truck, do we need to?
+	private Queue<Pallet> trunk = new LinkedList<Pallet>();
+	
+	private int trunk_capacity = 5;
 
 	public Truck() {
 		this(-1, "", "");
@@ -61,8 +69,43 @@ public class Truck extends Vehicle {
 		bay = dest;
 	}
 	
-	public void loadTruck(ArrayList<Pallet> goods) {
-		trunk = goods;
+	// loading the truck all in once
+	public void load(ArrayList<Pallet> goods) {
+		if (goods == null) {
+			throw new IllegalArgumentException(toString() + " cannot load null goods!");
+		}
+		
+		for (Pallet pallet : goods) {
+			load(pallet);
+		}
+	}
+	
+	public void load(Pallet good) {
+		if (good == null) {
+			throw new IllegalArgumentException(toString() + " cannot load null good!");
+		}
+		trunk.offer(good);
+	}
+	
+	public void displayTrunk() {
+		System.out.println(toString() + " contents:");
+		for (Pallet cargo : trunk) {
+			System.out.println(cargo);
+		}
+	}
+	
+	// unloading the truck one by one
+	public boolean unload(ForkLift lift) {
+		if (lift == null) {
+			throw new IllegalArgumentException(toString() + " cannot take null ForkLift!");
+		}
+		
+		if (!trunk.isEmpty()) {
+			lift.loadCargo(trunk.poll());
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -72,8 +115,10 @@ public class Truck extends Vehicle {
 	}
 
 	@Override
+	// add a simple counter display to the site
+	// TODO: is there a fancier way to do it?
 	public String toString() {
-		return super.toString() + "-" + nick_name;
+		return super.toString() + "-" + nick_name + " [" + consumption_line.size() + "/" + queue_capacity + "]";
 	}
 
 	public LocalDateTime arrivedAt() {
@@ -108,6 +153,15 @@ public class Truck extends Vehicle {
 			status = TRUCK_STATUS.MOVING_TO_BAY;
 		}
 	}
+	
+	private void routineAtBay() {
+		// only start moving to the exit if the truck is empty
+		if (trunk.isEmpty()) {
+			setDestination(exit);
+			bay.clear(this);
+			status = TRUCK_STATUS.MOVING_TO_EXIT;
+		}
+	}
 
 	@Override
 	public void step(SimState state) {
@@ -128,9 +182,7 @@ public class Truck extends Vehicle {
 			break;
 
 		case AT_BAY:
-			setDestination(exit);
-			bay.clear(this);
-			status = TRUCK_STATUS.MOVING_TO_EXIT;
+			routineAtBay();
 			break;
 
 		case MOVING_TO_EXIT:

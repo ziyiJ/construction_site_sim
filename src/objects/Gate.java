@@ -53,7 +53,7 @@ public class Gate extends Place {
 	
 	public void step(SimState state) {
 //		System.out.println("Gate checking");
-		UnloadingBay bay = _siteState.agentReg.nextEmpyBay();
+		UnloadingBay bay = _siteState.agentReg.nextEmptyBay();
 		if (bay != null) // if we do have an empty bay
 			releaseNext(bay);
 	}

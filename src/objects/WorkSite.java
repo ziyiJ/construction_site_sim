@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.activity.InvalidActivityException;
+
 import sim.engine.SimState;
 import sim.portrayal.DrawInfo2D;
 import core.Place;
@@ -45,8 +47,7 @@ public class WorkSite extends Place {
 		consumption_line.clear();
 	}
 	
-	// TODO: get a proper exception type!!
-	public void takeInCargo(ForkLift vehicle) throws Exception {
+	public void takeInCargo(ForkLift vehicle) throws InvalidActivityException {
 		if (vehicle == null) {
 			throw new IllegalArgumentException(toString() + " cannot take null ForkLift!");
 		}
@@ -55,7 +56,7 @@ public class WorkSite extends Place {
 			consumption_line.add(vehicle.unloadCargo());
 		}
 		else {
-			throw new Exception(toString() + " queue capacity breached!");
+			throw new InvalidActivityException(toString() + " queue capacity breached!");
 		}
 	}
 	

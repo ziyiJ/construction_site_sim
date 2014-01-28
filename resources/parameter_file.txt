@@ -20,7 +20,7 @@ StartTime = 2012-11-29T13:27
 ##
 ## Number of forklifts to use
 ##
-ForkLiftNum = 4
+ForkLiftNum = 2
 
 ## enable this if simulation parameter dump on the console is needed
 print-params = true

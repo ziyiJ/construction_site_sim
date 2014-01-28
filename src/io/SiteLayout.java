@@ -54,7 +54,8 @@ public class SiteLayout {
 				T new_agent = type.newInstance();
 				new_agent.setID(Integer.parseInt(line[1]));
 				new_agent.setSiteState(site);
-				new_agent.startWorking();
+				// TODO: a better way to have different site with different rate of working!!
+				new_agent.startWorking(5000);
 				new_agent.setPositionAndOrientation(
 						new Double2D(Double.parseDouble(line[2]), Double.parseDouble(line[3])), 
 						Double.parseDouble(line[4]));
